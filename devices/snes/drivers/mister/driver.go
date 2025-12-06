@@ -8,36 +8,48 @@ import (
 	"sni/cmd/sni/config"
 	"sni/devices"
 	"sni/protos/sni"
+	"time"
 )
 
 const driverName = "mister"
-const defaultAddressSpace = sni.AddressSpace_SnesABus
-
 const misterPort = "23074"
 
 var driver *Driver
 
-type Client struct {
-	addr *net.TCPAddr
-}
 type Driver struct {
 	container devices.DeviceContainer
 	client    *Client
 }
 
 func NewDriver(address *net.TCPAddr) *Driver {
-	return &Driver{
+	var d *Driver
+	d = &Driver{
 		container: devices.NewDeviceDriverContainer(d.openDevice),
 		client: &Client{
 			addr: address,
 		},
 	}
+	return d
 }
 
 func (d *Driver) openDevice(uri *url.URL) (q devices.Device, err error) {
-	return nil, nil
-}
+	// create a new device with its own connection:
+	var addr *net.TCPAddr
+	addr, err = net.ResolveTCPAddr("tcp", uri.Host)
+	if err != nil {
+		return
+	}
 
+	var c *Client
+	c = NewClient(addr, addr.String(), time.Second*5)
+	err = c.Connect()
+	if err != nil {
+		return
+	}
+
+	q = c
+	return
+}
 func (d *Driver) DisplayName() string {
 	return "MisterFPGA SNES Core"
 }
