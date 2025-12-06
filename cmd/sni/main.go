@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/postfinance/single"
 	"log"
 	"net/http"
 	"runtime"
@@ -14,13 +13,16 @@ import (
 	"sni/devices/snes/drivers/emunwa"
 	"sni/devices/snes/drivers/fxpakpro"
 	"sni/devices/snes/drivers/luabridge"
+	"sni/devices/snes/drivers/mister"
 	"sni/devices/snes/drivers/mock"
 	"sni/devices/snes/drivers/retroarch"
 	"sni/services/grpcimpl"
 	"sni/services/usb2snes"
-)
 
-import _ "net/http/pprof"
+	"github.com/postfinance/single"
+
+	_ "net/http/pprof"
+)
 
 // build variables set via ldflags by `go build -ldflags="-X 'main.version=v1.0.0'"`:
 var (
@@ -93,6 +95,7 @@ func main() {
 	emunwa.DriverInit()
 	luabridge.DriverInit()
 	retroarch.DriverInit()
+	mister.DriverInit()
 	mock.DriverInit()
 
 	// start the servers:

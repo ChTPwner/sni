@@ -63,6 +63,11 @@ var (
 		// We are not setting it here
 		"emunw_disable":    false,
 		"emunw_detect_log": false,
+
+		
+		"mister_disable":     true,
+		"mister_host":        "",
+		"mister_listen_port": 23074,
 	}
 	nwaConfigs = map[string]any{
 		"nwa_port_range":        NwaDefaultPort,
